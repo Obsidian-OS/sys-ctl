@@ -8,6 +8,7 @@ import DisplaySettings from './providers/display.js';
 import LocalisationSettings from './providers/localisation.js';
 import NetworkSettings from './providers/network.js';
 import PowerSettings from './providers/power.js';
+import UpdatesSettings from "./providers/updates.js";
 
 export interface SystemSettings {
     quickSettings: string[];
@@ -37,6 +38,7 @@ export default class Sysctl extends Plugin {
             new LocalisationSettings(this),
             new NetworkSettings(this),
             new PowerSettings(this),
+            new UpdatesSettings(this),
         ])
             await provider.init((settings, defaultState) => this.quickSettings.registerQuickSetting(settings, defaultState));
 
