@@ -1,0 +1,16 @@
+.quicksettings-container {
+/*    width: 100%;*/
+/*    display: flex;*/
+/*    flex-basis: 32%;*/
+/*    flex-wrap: wrap;*/
+/*    justify-content: center;*/
+/*    gap: 1%;*/
+    display: flex;
+    flex-direction: column;
+    align-items: stretch;
+    
+}
+
+.quicksettings-container > .quicksetting {
+    
+}
