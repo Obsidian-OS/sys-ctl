@@ -1,10 +1,13 @@
 import { Setting } from "obsidian";
 import * as lucide from "lucide";
 
-import SettingsProvider from "../provider.js";
-import { QuickSetting } from "../quicksettings.js";
+import SettingsProvider, {RegisterQuickAction} from "../provider.js";
 
-export default class NetworkSettings extends SettingsProvider {
+export default class NetworkSettings extends SettingsProvider<{}> {
+    ownPreferences = {}
+
+    protected renderOwnPreferences(container: HTMLElement) {}
+
     static wifiIcon(enabled: boolean): SVGElement {
         if (enabled)
             return lucide.createElement(lucide.Wifi);
@@ -12,15 +15,20 @@ export default class NetworkSettings extends SettingsProvider {
             return lucide.createElement(lucide.WifiOff);
     }
     
-    async init(registerQuickSetting: (setting: QuickSetting<boolean>, defaultState: boolean) => void) {
-        registerQuickSetting({
+    async init(registerQuickSetting: RegisterQuickAction) {
+        registerQuickSetting<boolean>({
             name: 'wifi:toggle',
             render(el, state) {
+                const wifiIcon = document.createElement('span');
+                wifiIcon.replaceChildren(NetworkSettings.wifiIcon(state.getState()));
+                state.onChange(state => wifiIcon.replaceChildren(NetworkSettings.wifiIcon(state)));
+
                 new Setting(el)
                     .setName("WiFi")
                     .setDesc("Toggle Wireless Connectivity on or off")
                     .addToggle(toggle => toggle
-                        .toggleEl.before(NetworkSettings.wifiIcon(state)))
+                        .onChange(cb => state.setState(cb))
+                        .toggleEl.before(wifiIcon))
                     .addExtraButton(button => button
                         .setIcon("chevron-right")
                         .onClick(() => console.log('more')))

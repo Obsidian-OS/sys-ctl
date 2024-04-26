@@ -5,10 +5,10 @@ import StateManager from "@j-cake/jcake-utils/state";
 
 export interface QuickSetting<State> {
     name: string,
-    render(el: HTMLElement, state: State): void,
+    render(el: HTMLElement, state: StatefulQuickSetting<State>): void,
 }
 
-export type StatefulQuickSetting<State> = QuickSetting<State> & { getState(): State, setState(state: Partial<State>): void };
+export type StatefulQuickSetting<State> = QuickSetting<State> & { getState(): State, setState(state: Partial<State>): void, onChange(handler: (state: State) => void): void };
 
 export default class QuickSettingsPanel extends Modal {
     quickSettings: Record<string, StatefulQuickSetting<any>> = {};
@@ -32,18 +32,27 @@ export default class QuickSettingsPanel extends Modal {
     registerQuickSetting<State>(quickSetting: QuickSetting<State>, defaultState: State) {
         if (quickSetting.name in this.quickSettings)
             throw new Error(`QuickSetting '${quickSetting.name}' is already defined`);
-        
+
+        const requiresStateMgr = (x: any): x is Partial<object> => typeof x == 'object';
+
         const stateManager = {
-            state: typeof defaultState == "object" ? new StateManager(defaultState) :  defaultState
+            state: requiresStateMgr(defaultState) ? new StateManager(defaultState) :  defaultState
         };
+
+        const stateChange: ((state: State) => void)[] = [];
         
         this.quickSettings[quickSetting.name] = Object.assign(quickSetting, stateManager.state instanceof StateManager ? {
             getState: stateManager.state.get.bind(stateManager.state),
             setState: stateManager.state.setState.bind(stateManager.state),
+            onChange: stateManager.state.onStateChange.bind(stateManager.state)
         } : {
             getState: () => stateManager.state,
-            setState: state => stateManager.state = state
-        });
+            setState: (state: State) => {
+                stateManager.state = state;
+                stateChange.forEach(i => i(state));
+            },
+            onChange: (handler: (state: State) => void) => stateChange.push(handler)
+        }) as StatefulQuickSetting<State>;
     }
 
     onClose() {

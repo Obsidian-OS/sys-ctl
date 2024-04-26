@@ -1,8 +1,11 @@
-import SettingsProvider from "../provider.js";
-import { QuickSetting } from "../quicksettings.js";
+import SettingsProvider, {RegisterQuickAction} from "../provider.js";
 
-export default class LocalisationSettings extends SettingsProvider {
-    async init(registerQuickSetting: (setting: QuickSetting<any>) => void) {
+export default class LocalisationSettings extends SettingsProvider<{}> {
+    ownPreferences = {}
+
+    protected renderOwnPreferences(container: HTMLElement) {}
+
+    async init(registerQuickSetting: RegisterQuickAction) {
         
     }
 }

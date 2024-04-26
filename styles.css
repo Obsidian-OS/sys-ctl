@@ -14,3 +14,7 @@
 .quicksettings-container > .quicksetting {
     
 }
+
+input.code {
+    font-family: var(--font-monospace-default);
+}
