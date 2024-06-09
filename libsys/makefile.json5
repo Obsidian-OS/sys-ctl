@@ -1,0 +1,23 @@
+{
+    targets: {
+        '../build/libsys/index.node': {
+            dependencies: [
+                'src/*.rs'
+            ],
+            run: "cargo build --message-format=json | jq -r --arg manifest $(realpath ./Cargo.toml) '. | select(.reason == \"compiler-artifact\" and .manifest_path == $manifest).filenames[]' | xargs -I {} cp {} ../build/libsys/index.node"
+        },
+        '../build/libsys/index.js': {
+            dependencies: [
+                'index.ts'
+            ],
+            run: "esbuild index.ts --outdir=../build/libsys"
+        },
+        '../build/libsys/package.json': {
+            dependencies: [
+                'package.json',
+                'makefile.json5'
+            ],
+            run: "cat package.json | jq -r '. * .deploy * {deploy:null} | with_entries(select(.value |. != null))' > ../build/libsys/package.json"
+        },
+    }
+}

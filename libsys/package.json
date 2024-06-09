@@ -1,0 +1,23 @@
+{
+    "name": "libsys",
+    "version": "0.1.0",
+    "description": "A standardised API for interacting with the system",
+    "main": "index.js",
+    "scripts": {
+        "build:libsys": "mkjson ../build/\\*"
+    },
+    "devDependencies": {
+        "esbuild": "latest",
+        "@j-cake/mkjson": "latest"
+    },
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Obsidian-OS/sys-ctl.git"
+    },
+    "private": true,
+    "deploy": {
+        "name": "libsys",
+        "main": "index.js",
+        "scripts": null
+    }
+}

@@ -1,4 +1,4 @@
-import { Setting } from "obsidian";
+import {Setting} from "obsidian";
 import * as lucide from "lucide";
 
 import SettingsProvider, {RegisterQuickAction} from "../provider.js";
@@ -6,7 +6,9 @@ import SettingsProvider, {RegisterQuickAction} from "../provider.js";
 export default class NetworkSettings extends SettingsProvider<{}> {
     ownPreferences = {}
 
-    protected renderOwnPreferences(container: HTMLElement) {}
+    protected renderOwnPreferences(container: HTMLElement): void {
+
+    }
 
     static wifiIcon(enabled: boolean): SVGElement {
         if (enabled)
@@ -14,7 +16,11 @@ export default class NetworkSettings extends SettingsProvider<{}> {
         else
             return lucide.createElement(lucide.WifiOff);
     }
-    
+
+    async toggleWifi() {
+
+    }
+
     async init(registerQuickSetting: RegisterQuickAction) {
         registerQuickSetting<boolean>({
             name: 'wifi:toggle',

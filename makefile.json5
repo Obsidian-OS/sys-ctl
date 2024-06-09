@@ -4,29 +4,47 @@
     },
     targets: {
         'build/main.js': {
-            dependencies: ['src/*.ts'],
+            dependencies: [
+                'src/*.ts'
+            ],
             run: "esbuild src/main.ts --outdir=build --bundle --sourcemap --platform=node --format=cjs --external:obsidian --external:electron"
         },
         'build/package.json': {
-            dependencies: ['package.json', 'makefile.json5'],
+            dependencies: [
+                'package.json',
+                'makefile.json5'
+            ],
             run: "cat package.json | jq -r '. * .deploy * {deploy:null} | with_entries(select(.value |. != null))' > build/package.json"
         },
         'build/manifest.json': {
-            dependencies: ['manifest.json', 'package.json'],
+            dependencies: [
+                'manifest.json',
+                'package.json'
+            ],
             run: "cat manifest.json | jq -r '.' > build/manifest.json"
         },
         'build/styles.css': {
-            dependencies: ['styles.css'],
+            dependencies: [
+                'styles.css'
+            ],
             run: "cp styles.css build/styles.css"
         },
-
+        'build/libsys': {
+            dependencies: [
+                'libsys/src/*.rs',
+                'libsys/Cargo.toml',
+                'libsys/makefile.json5',
+                'libsys/package.json',
+                'libsys/index.ts'
+            ],
+            run: "$npm_execpath --prefix libsys run build:libsys"
+        },
         // phony
 
         clean: {
             phony: true,
             run: "rm -rf build node_modules *lock* *yarn* *pnpm*"
         },
-
         install: {
             phony: true,
             run: [

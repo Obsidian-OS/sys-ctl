@@ -6,7 +6,8 @@
     "dependencies": {
         "@j-cake/jcake-utils": "latest",
         "chalk": "latest",
-        "lucide": "latest"
+        "lucide": "latest",
+        "node-network-manager": "latest"
     },
     "scripts": {
 	"build:plugin": "esbuild src/main.ts --outdir=build --bundle --sourcemap --platform=node --format=cjs --external:obsidian --external:electron",
@@ -24,7 +25,7 @@
         "electron": "latest",
         "typescript": "latest",
         "esbuild": "latest",
-		"obsidian": "latest"
+        "obsidian": "latest"
     },
     "imports": {
         "#app": "./build/index.js"
